@@ -18,7 +18,7 @@ function initMap () {
     latitud = posicion.coords.latitude
     longitud = posicion.coords.longitude
 
-    var image = 'http://maps.google.com/mapfiles/kml/shapes/cycling.png'
+    var image = 'https://cdn.jsdelivr.net/emojione/assets/svg/1f6b4-1f3fd.svg'
     var miUbicacion = new google.maps.Marker({
       position: { lat: latitud, lng: longitud },
       animation: google.maps.Animation.DROP,
@@ -50,22 +50,39 @@ function initMap () {
     }, function (response, status) {
       if (status === 'OK') {
         directionsDisplay.setDirections(response)
+        directionsDisplay.setDirections(response)
+        var star = response.routes[0].legs[0].start_location
+        var end = response.routes[0].legs[0].end_location
+        function addMarkerStart (pos) {
+          var iconPartida = 'http://maps.google.com/mapfiles/kml/shapes/cycling.png'
+          new google.maps.Marker({
+            position: pos,
+            animation: google.maps.Animation.DROP,
+            map: map,
+            icon: iconPartida
+          })
+        }
+        function addMarkerFinish (pos) {
+          var iconTermino = 'https://cdn.jsdelivr.net/emojione/assets/png/1f6b5.png?v=2.2.7'
+          new google.maps.Marker({
+              position: pos,
+              animation: google.maps.Animation.DROP,
+              map: map,
+              icon: iconTermino
+            })
+        }
+        addMarkerStart(star)
+        addMarkerFinish(end)
       } else {
         window.alert('No encontramos una ruta.')
       }
     })
   }
   directionsDisplay.setMap(map)
+  directionsDisplay.setOptions({ suppressMarkers: true })
 
   var trazarRuta = function () {
     calculateAndDisplayRoute(directionsService, directionsDisplay)
   }
   document.getElementById('trazar-ruta').addEventListener('click', trazarRuta)
- 
-  var image = 'http://maps.google.com/mapfiles/kml/shapes/cycling.png'
-  var iconRoute = new google.maps.Marker({
-      position: directionsDisplay,
-      map: map,
-      icon: image
-  })
 }
